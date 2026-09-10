@@ -8,7 +8,7 @@ description: >-
   Activate this skill when translating, hacking, reverse engineering, or creating Thai mods for PS1 games.
 ---
 
-# 🎮 PSX Thai Translation & ROM Hacking Skill (FlushSKILL-PSX)
+# 🎮 PSX Thai Translation & ROM Hacking Skill (FlishSKILL-PSX)
 
 This skill provides end-to-end workflows, reverse-engineering runbooks, technical invariants, and automated tools for creating professional, stable Thai translation mods for Sony PlayStation 1 (PS1/PSX) games.
 

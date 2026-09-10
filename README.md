@@ -1,9 +1,9 @@
-# 🛡️ FlushSKILL-PSX: PS1 Thai Translation Modding Skill
+# 🛡️ FlishSKILL-PSX: PS1 Thai Translation Modding Skill
 
 > **Universal Knowledge Base, Hard Constraints, and Automation Toolkit for PlayStation 1 (PSX/PS1) Thai ROM Translation**  
 > *Developed for Retro Translation Studio by Fiendish Tepes*
 
-[![Antigravity Skill](https://img.shields.io/badge/Antigravity-Skill-blue.svg)](https://github.com/fiendishTepes/FlushSKILL-PSX)
+[![Antigravity Skill](https://img.shields.io/badge/Antigravity-Skill-blue.svg)](https://github.com/fiendishTepes/FlishSKILL-PSX)
 [![Platform: PS1](https://img.shields.io/badge/Platform-Sony%20PlayStation%201-lightgrey.svg)]()
 [![Language: Python 3](https://img.shields.io/badge/Language-Python%203.10%2B-green.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
@@ -18,14 +18,14 @@ Translating PlayStation 1 games into Thai presents unique technical challenges d
 * **Complex Thai vertical stacking**: Consonants, upper vowels, and tone marks stack up to 3 levels high.
 * **Opcodes interleaved in text**: Script event interpreters mix dialogue text directly with GPU rendering opcodes.
 
-**FlushSKILL-PSX** encapsulates the complete reverse-engineering methodology, anti-crash laws, and automation pipeline developed during the full translation of *Chou Mashin Eiyuuden Wataru: Another Step (PS1)*.
+**FlishSKILL-PSX** encapsulates the complete reverse-engineering methodology, anti-crash laws, and automation pipeline developed during the full translation of *Chou Mashin Eiyuuden Wataru: Another Step (PS1)*.
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-FlushSKILL-PSX/
+FlishSKILL-PSX/
 ├── SKILL.md                          # Antigravity Skill Definition
 ├── README.md                         # Project Documentation
 ├── references/                       # Deep Architectural Runbooks
@@ -60,7 +60,7 @@ To load this skill in your Antigravity environment:
 
 ```bash
 # Clone directly into your Antigravity skills directory
-git clone https://github.com/fiendishTepes/FlushSKILL-PSX.git ~/.gemini/config/skills/FlushSKILL-PSX
+git clone https://github.com/fiendishTepes/FlishSKILL-PSX.git ~/.gemini/config/skills/FlishSKILL-PSX
 ```
 
 Or reference it in your workspace `.agents/skills/` directory.
