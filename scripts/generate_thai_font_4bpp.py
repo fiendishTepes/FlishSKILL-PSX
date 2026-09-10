@@ -16,32 +16,61 @@ Exact PS1 Hardware / Engine Specifications:
 """
 
 import os
+import sys
 import json
 from PIL import Image, ImageDraw, ImageFont
 
-BASE_DIR = r"D:\mod-thai\Retro_Trans_Studio\PS1\Wataru"
-FONT_DIR = os.path.join(BASE_DIR, "03_FONT_ENGINE")
-MSG_CG_PATH = os.path.join(BASE_DIR, "02_EXTRACTED", "FM16", "MSG_CG.BIN")
-TABLE_PATH = os.path.join(FONT_DIR, "thai_table.json")
-PREVIEW_PATH = os.path.join(FONT_DIR, "wataru_4bpp_font_grid.png")
-BIN_PATH = "D:/mod-thai/Retro_Trans_Studio/PS1/Wataru/Chou Mashin Eiyuuden Wataru - Another Step (Japan).bin"
-
-TTF_PATH = "C:/Windows/Fonts/tahomabd.ttf"
-
-import sys
-sys.path.append(FONT_DIR)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_ROOT = os.path.dirname(SCRIPT_DIR)
+sys.path.append(SCRIPT_DIR)
 from prioritize_clusters import get_prioritized_clusters
 
+# Paths: check if running inside Wataru studio or standalone on another machine
+BASE_DIR = r"D:\mod-thai\Retro_Trans_Studio\PS1\Wataru"
+FONT_DIR = os.path.join(BASE_DIR, "03_FONT_ENGINE")
+BIN_PATH = "D:/mod-thai/Retro_Trans_Studio/PS1/Wataru/Chou Mashin Eiyuuden Wataru - Another Step (Japan).bin"
+
+if os.path.exists(BASE_DIR):
+    MSG_CG_PATH = os.path.join(BASE_DIR, "02_EXTRACTED", "FM16", "MSG_CG.BIN")
+    TABLE_PATH = os.path.join(FONT_DIR, "thai_table.json")
+    PREVIEW_PATH = os.path.join(FONT_DIR, "wataru_4bpp_font_grid.png")
+else:
+    # Standalone mode on any machine
+    OUTPUT_DIR = os.path.join(REPO_ROOT, "output")
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    MSG_CG_PATH = os.path.join(OUTPUT_DIR, "MSG_CG.BIN")
+    TABLE_PATH = os.path.join(REPO_ROOT, "templates", "thai_table.json")
+    PREVIEW_PATH = os.path.join(OUTPUT_DIR, "thai_4bpp_font_grid.png")
+
+# Auto-detect standard Thai TTF fonts across platforms (Windows, Linux, macOS)
+TTF_CANDIDATES = [
+    "C:/Windows/Fonts/tahomabd.ttf",
+    "C:/Windows/Fonts/tahoma.ttf",
+    "C:/Windows/Fonts/arial.ttf",
+    "/usr/share/fonts/truetype/thai/Garuda.ttf",
+    "/usr/share/fonts/truetype/tlwg/TlwgTypo.ttf",
+    "/System/Library/Fonts/Thonburi.ttc"
+]
+TTF_PATH = next((p for p in TTF_CANDIDATES if os.path.exists(p)), "C:/Windows/Fonts/tahomabd.ttf")
+
 def read_base_msg_cg():
-    """Extract clean original MSG_CG.BIN from base BIN"""
-    with open(BIN_PATH, 'rb') as f:
-        f.seek(148515 * 2352)
-        sectors = (74880 + 2047) // 2048
-        data = bytearray()
-        for _ in range(sectors):
-            sec = f.read(2352)
-            data.extend(sec[24:24+2048])
-    return bytearray(data[:74880])
+    """Extract clean original MSG_CG.BIN, read existing file, or create clean 74,880B container"""
+    if os.path.exists(MSG_CG_PATH):
+        with open(MSG_CG_PATH, 'rb') as f:
+            data = bytearray(f.read())
+            if len(data) == 74880:
+                return data
+    if os.path.exists(BIN_PATH):
+        with open(BIN_PATH, 'rb') as f:
+            f.seek(148515 * 2352)
+            sectors = (74880 + 2047) // 2048
+            data = bytearray()
+            for _ in range(sectors):
+                sec = f.read(2352)
+                data.extend(sec[24:24+2048])
+        return bytearray(data[:74880])
+    print("[!] Running in standalone mode: creating clean 74,880-byte font container.")
+    return bytearray(74880)
 
 def render_cluster_layer(cluster, font, dx=0, dy=0):
     """Render a single glyph layer with mark-to-mark elevation and reinforced legibility"""
