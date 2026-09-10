@@ -1,10 +1,11 @@
-# 🛡️ FlishSKILL-PSX: PS1 Thai Translation Modding Skill
+﻿# 🛡️ FlishSKILL-PSX: PlayStation 1 & Multi-Console Thai Translation Skill
 
-> **Universal Knowledge Base, Hard Constraints, and Automation Toolkit for PlayStation 1 (PSX/PS1) Thai ROM Translation**  
+> **Universal Knowledge Base, Hard Constraints, and Automation Toolkit for PlayStation 1 (PSX/PS1) & Multi-Platform Retro Console Thai ROM Translation**  
 > *Developed for Retro Translation Studio by Fiendish Tepes*
 
 [![Antigravity Skill](https://img.shields.io/badge/Antigravity-Skill-blue.svg)](https://github.com/fiendishTepes/FlishSKILL-PSX)
-[![Platform: PS1](https://img.shields.io/badge/Platform-Sony%20PlayStation%201-lightgrey.svg)]()
+[![Platforms](https://img.shields.io/badge/Platforms-PS1%20%7C%20PSP%20%7C%20SFC%20%7C%20GBA%20%7C%20NDS-orange.svg)]()
+[![Catalog: 112 Games](https://img.shields.io/badge/Catalog-112%20Thai%20Games-brightgreen.svg)]()
 [![Language: Python 3](https://img.shields.io/badge/Language-Python%203.10%2B-green.svg)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 
@@ -12,13 +13,17 @@
 
 ## 🌟 Overview
 
-Translating PlayStation 1 games into Thai presents unique technical challenges due to the hardware limitations of the 1990s:
-* **No dynamic font rendering**: PS1 lacks HarfBuzz, FreeType, or native Unicode support.
-* **Tight VRAM budgets**: Font tiles are stored in raw 4bpp/8bpp formats sharing RAM with scene tilemaps.
-* **Complex Thai vertical stacking**: Consonants, upper vowels, and tone marks stack up to 3 levels high.
-* **Opcodes interleaved in text**: Script event interpreters mix dialogue text directly with GPU rendering opcodes.
-
-**FlishSKILL-PSX** encapsulates the complete reverse-engineering methodology, anti-crash laws, and automation pipeline developed during the full translation of *Chou Mashin Eiyuuden Wataru: Another Step (PS1)*.
+**FlishSKILL-PSX** is a production-grade Antigravity AI skill and modding suite engineered for:
+1. **PlayStation 1 Deep Modding**:
+   * Custom 4bpp 16x16 Thai font rendering with 1px drop shadow and 2-tier mark-to-mark elevation.
+   * VRAM buffer protection (preventing 74,880B font overflow into adjacent tilemaps).
+   * Sequential bytecode event parsing (preventing cascading 3D triangle GPU crash cascades).
+   * CD-ROM XA Mode 2 Form 1 sector injection and automated CHD compression.
+   * MIPS R3000 assembly trainer & starting fund injection (e.g. 983,040 Gold in `SLPS_013.68`).
+2. **Universal Multi-Console Retro Patching**:
+   * Pure Python patch engines for **PPF3** (PS1, PSP), **BPS** (SFC, GBA, NDS), and **IPS** (SFC, GB, GBA).
+   * Proprietary MemoryCardTH keystream unlocker (`mc_rom_key` + `mc_xor_keystream`) for encrypted `.locked.gz` patch files.
+   * Comprehensive database of **112 Thai translation projects across 9 consoles** with SHA1 verification.
 
 ---
 
@@ -26,31 +31,38 @@ Translating PlayStation 1 games into Thai presents unique technical challenges d
 
 ```text
 FlishSKILL-PSX/
-├── SKILL.md                          # Antigravity Skill Definition
-├── README.md                         # Project Documentation
-├── references/                       # Deep Architectural Runbooks
-│   ├── RULES_AND_CONSTRAINTS.md      # Anti-crash laws & hard constraints
-│   ├── FONT_ENGINE_ARCHITECTURE.md   # 4bpp 16x16 Thai font rendering guide
-│   ├── REVERSE_ENGINEERING_GUIDE.md  # Script bytecode & pointer relocation
-│   └── ISO_REPACKING_PLAYBOOK.md     # CD-ROM sector injection & CHD guide
-├── scripts/                          # Production Automation Tools
-│   ├── generate_thai_font_4bpp.py    # 4bpp 16x16 font generator with drop shadow
-│   ├── prioritize_clusters.py        # Intelligent Thai cluster prioritization
-│   ├── repack_iso.py                 # Sector-accurate CD-ROM injector & CHD builder
-│   └── verify_build_safety.py        # Automated pre-flight validator
-└── templates/                        # Reusable Schemas and Tables
-    ├── thai_table.json               # 422-token mapping table
-    └── universal_thai_table.tbl      # Standard ROM hacking TBL file
+├── SKILL.md                                # Antigravity Skill Definition
+├── README.md                               # Master Documentation & Setup Guide
+├── references/                             # Architectural Runbooks & Manuals
+│   ├── RULES_AND_CONSTRAINTS.md            # Anti-crash laws & hardware constraints
+│   ├── MULTI_CONSOLE_PATCHING_GUIDE.md     # PPF, BPS, IPS, and MCTH keystream guide
+│   ├── PS1_TRAINER_ASSEMBLY_HACKING.md     # MIPS assembly New Game trainer guide
+│   ├── RETRO_CONSOLE_CATALOG.md            # 112-game Thai patch catalog & SHA1 table
+│   ├── FONT_ENGINE_ARCHITECTURE.md         # 4bpp 16x16 Thai font rendering guide
+│   ├── REVERSE_ENGINEERING_GUIDE.md        # Script bytecode & pointer relocation
+│   └── ISO_REPACKING_PLAYBOOK.md           # CD-ROM sector injection & CHD guide
+├── scripts/                                # Production Automation Toolkit
+│   ├── patch_cli.py                        # Universal CLI patcher (PPF/BPS/IPS/MCTH)
+│   ├── patch_slps_gold_trainer.py          # MIPS assembly starting gold injector
+│   ├── generate_thai_font_4bpp.py          # 4bpp 16x16 font generator with drop shadow
+│   ├── prioritize_clusters.py              # Intelligent Thai cluster prioritization
+│   ├── repack_iso.py                       # Sector-accurate CD-ROM injector & CHD builder
+│   └── verify_build_safety.py              # Automated pre-flight validator
+└── templates/                              # Schemas, Catalogs & Tables
+    ├── catalog.json                        # 112-game database with SHA1 checksums
+    ├── thai_table.json                     # 422-token mapping table
+    └── universal_thai_table.tbl            # Standard ROM hacking TBL file
 ```
 
 ---
 
-## 🛡️ The 4 Master Rules (Anti-Crash Guarantee)
+## 🛡️ The 5 Master Rules (Anti-Crash Guarantee)
 
 1. **Font Size Lock**: Font container size must NEVER exceed native allocation (e.g. 74,880 bytes). Any overflow bleeds into scene VRAM buffers causing rainbow static.
 2. **Bytecode Preservation**: Cutscene dialogues contain internal opcodes (`0x1912`, `0x1802`). Overwriting with unescaped text or zeros (`0x0000`) causes the GPU to render cascading 3D triangles.
 3. **Sector Boundary Rule**: Mode 2 Form 1 CD sectors require files to be exact multiples of 2,048 bytes (e.g. 37 sectors = 75,776 bytes).
 4. **Pointer Relocation**: When expanded Thai text exceeds native limits, relocate to trailing free space and update 32-bit RAM pointers (`RAM_BASE + File_Offset`).
+5. **Surgical Assembly Patching**: When injecting cheats/trainers, replace existing redundant opcodes without displacing surrounding function pointers.
 
 ---
 
@@ -59,11 +71,9 @@ FlishSKILL-PSX/
 To load this skill in your Antigravity environment:
 
 ```bash
-# Clone directly into your Antigravity skills directory
+# Clone directly into your global Antigravity skills directory
 git clone https://github.com/fiendishTepes/FlishSKILL-PSX.git ~/.gemini/config/skills/FlishSKILL-PSX
 ```
-
-Or reference it in your workspace `.agents/skills/` directory.
 
 ---
 
