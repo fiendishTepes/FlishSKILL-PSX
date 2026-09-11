@@ -1,4 +1,4 @@
-﻿---
+---
 name: psx-thai-translation
 description: >-
   Comprehensive skill and master knowledge base for PlayStation 1 (PSX / PS1) and Multi-Platform Retro Console
@@ -39,14 +39,25 @@ When working on PS1 Thai translation mods, NEVER violate these five cardinal rul
 5. **MIPS Assembly Trainer Injection (Surgical Byte Replacement)**:
    * When injecting starting gold or cheats into PS1 executables (`SLPS_01x.xx`), replace existing store instructions in New Game initializers without altering file length or branch displacements.
 
+6. **Dual-Syllable Compound Tiles & Zero-Void Kerning (Eliminating "Jagged Teeth" Spacing)**:
+   * In retro monospace rendering engines ($x \gets x + 16$), standalone leading vowels (`เ`, `แ`, `โ`, `ใ`, `ไ`) and trailing vowels (`า`, `ะ`, `ำ`) leave a 10-12px void, causing unsightly "jagged teeth" spacing (สระห่างกันเป็นฟันปลา).
+   * **Rule**: Precompose high-frequency dual-character and triple-character syllables (`มา`, `จะ`, `นำ`, `ไป`, `ใน`, `ได้`, `ไม่`, `เมื่`, `เยื`, `เรื่`, etc.) into single 16x16 tiles. Extend truncated stems on `เ` and `แ` up to Row 3 for full 10-12px vertical height.
+
+7. **Universal Mark-Guard (Zero Detached Marks)**:
+   * **Rule**: In `tokenize_thai_units()`, NEVER match a 2-character compound if the following character is an upper vowel, lower vowel, or tone mark (`'่้๊๋์ิีึืั็ุู'`). This prevents "Consonant Stealing" where tone marks detach into floating mid-air tiles.
+
+8. **Guaranteed Fallback Decomposition (100% Crash Immunity)**:
+   * **Rule**: Always guarantee all 46 base consonants and 23 standalone marks in the font table. If any rare cluster exceeds the 418-glyph cap, decompose it gracefully into individual characters (`for ch in token: emit(tbl[ch])`) instead of throwing an error or leaking bytecode.
+
 ---
 
 ## 🛠️ Reusable Tools & Scripts in this Skill
 
 | Script | Purpose | Path |
 | :--- | :--- | :--- |
-| `generate_thai_font_4bpp.py` | Generates authentic 16x16 4bpp font tiles with 1px drop shadow, 2-tier elevation, and standalone mode | [`scripts/generate_thai_font_4bpp.py`](./scripts/generate_thai_font_4bpp.py) |
-| `prioritize_clusters.py` | Smart Thai cluster compiler; extracts vocabulary and fits into 418 glyph slots | [`scripts/prioritize_clusters.py`](./scripts/prioritize_clusters.py) |
+| `build_retro_pixel_font_4bpp.py` | Compiles 4bpp 16x16 pixel-art retro font with 61 compound tiles, 1px crisp stroke, and locked baseline | [`scripts/build_retro_pixel_font_4bpp.py`](./scripts/build_retro_pixel_font_4bpp.py) |
+| `generate_thai_font_4bpp.py` | Generates authentic 16x16 4bpp font tiles from TTF with 1px drop shadow, 2-tier elevation, and standalone mode | [`scripts/generate_thai_font_4bpp.py`](./scripts/generate_thai_font_4bpp.py) |
+| `prioritize_clusters.py` | Smart Thai cluster compiler with Universal Mark-Guard; extracts vocabulary and fits into 418 glyph slots | [`scripts/prioritize_clusters.py`](./scripts/prioritize_clusters.py) |
 | `repack_iso.py` | Injects modified binaries (SLPS, MSG_CG, R00) directly at exact CD LBA sectors and converts to CHD | [`scripts/repack_iso.py`](./scripts/repack_iso.py) |
 | `patch_slps_gold_trainer.py` | Injects New Game starting Gold trainer (983,040 Gold) directly into MIPS assembly | [`scripts/patch_slps_gold_trainer.py`](./scripts/patch_slps_gold_trainer.py) |
 | `patch_cli.py` | Universal multi-console patch engine (PPF3, BPS, IPS, MemoryCardTH `.locked.gz` decryption) | [`scripts/patch_cli.py`](./scripts/patch_cli.py) |
