@@ -49,6 +49,11 @@ When working on PS1 Thai translation mods, NEVER violate these five cardinal rul
 8. **Guaranteed Fallback Decomposition (100% Crash Immunity)**:
    * **Rule**: Always guarantee all 46 base consonants and 23 standalone marks in the font table. If any rare cluster exceeds the 418-glyph cap, decompose it gracefully into individual characters (`for ch in token: emit(tbl[ch])`) instead of throwing an error or leaking bytecode.
 
+9. **Shopkeeper System & Interactive Object Audit (Preventing Japanese Glyph Clashing)**:
+   * In retro console games with dynamic overlays, dialogue scripts are divided into multiple distinct sub-systems: main cutscenes, overworld NPCs, shopkeeper clerks, checkout counters, and interactive object inspection points (capsule displays, shelves, bulletin boards).
+   * When replacing the font container (`MSG_CG.BIN`) with a custom Thai font atlas, Japanese character tokens (0x01..0xFF) share the exact numerical byte range as Thai characters. If an interactive object or clerk dialogue block is omitted from injection, the game engine renders raw Japanese opcodes/kanji/katakana as scrambled Thai text ("ธิ พ น คะไจว...").
+   * **Rule**: Perform a full-table pointer scan (`0x800CE000 + offset`) to map out all secondary interactive tables (e.g. `0x1233C..0x12378`), pack translated dialogues sequentially into designated contiguous blocks, and update all 32-bit RAM entry pointers.
+
 ---
 
 ## 🛠️ Reusable Tools & Scripts in this Skill
