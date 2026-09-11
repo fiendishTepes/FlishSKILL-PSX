@@ -54,6 +54,18 @@ When working on PS1 Thai translation mods, NEVER violate these five cardinal rul
    * When replacing the font container (`MSG_CG.BIN`) with a custom Thai font atlas, Japanese character tokens (0x01..0xFF) share the exact numerical byte range as Thai characters. If an interactive object or clerk dialogue block is omitted from injection, the game engine renders raw Japanese opcodes/kanji/katakana as scrambled Thai text ("ธิ พ น คะไจว...").
    * **Rule**: Perform a full-table pointer scan (`0x800CE000 + offset`) to map out all secondary interactive tables (e.g. `0x1233C..0x12378`), pack translated dialogues sequentially into designated contiguous blocks, and update all 32-bit RAM entry pointers.
 
+10. **Strict Native Slot Boundaries & Hardcoded Executable Jump Preservation (Preventing Scene Corruption)**:
+    * Main PS1 executables (`SLPS_01x.xx`) frequently contain hardcoded MIPS jump instructions targeting native dialogue start addresses inside overlay files (e.g. `R00.BIN`).
+    * Dynamically shifting dialogue offsets causes the CPU to jump into the middle of Thai strings, executing character IDs as GPU polygon drawing packets (stamping text onto floors/tiles) or crash cascades.
+    * **Rule**: When main executables hardcode dialogue entry points, lock all dialogue slots to their exact native start addresses and byte limits (Strict In-Place Slots) with clean null padding.
+
+11. **Honest Progress Accounting & Verification Invariant**:
+    * Never report 100% completion based purely on JSON row counts or automated compile scripts.
+    * Always distinguish between:
+      1. **Text Drafted in JSON**: Scaffolding/translation data.
+      2. **Injected to Disc**: Binary patched, but potentially harboring pointer or opcode mismatches.
+      3. **Playtested & Verified in Emulator**: Actually verified in-game with zero crashes, zero glitched text, and zero scene corruption.
+
 ---
 
 ## 🛠️ Reusable Tools & Scripts in this Skill
